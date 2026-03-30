@@ -34,14 +34,14 @@ const NavBar = () => {
 
  
   const handleLogout = () => {
-    localStorage.removeItem("auth"); // On vide la session
+    localStorage.removeItem("token"); 
     navigate("/login");
   };
 
   return (
     <AppBar
-      position="static"
-      sx={{ backgroundColor: "#fff", color: "#333", borderBottom: "1px solid #ddd" }}
+      position="fixed"
+      sx={{ backgroundColor: "#fff", color: "#333", borderBottom: "1px solid #ddd", zIndex: (theme) => theme.zIndex.drawer + 1 }}
       elevation={0}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
@@ -124,7 +124,7 @@ const NavBar = () => {
           sx={{ 
             cursor: "pointer", 
             transition: "transform 0.2s", 
-            "&:hover": { transform: "scale(1.05)" }, // Subtle zoom effect on hover
+            "&:hover": { transform: "scale(1.05)" }, 
             display: "flex",
             alignItems: "center"
           }}
@@ -132,7 +132,6 @@ const NavBar = () => {
           <img src="/photo/amana.jpeg" alt="Logo" style={{ height: "40px", objectFit: "contain"}} />
         </Box>
 
-        {/* CÔTÉ DROIT : Avatar + Menu Profil */}
         <Box>
           <IconButton onClick={handleAvatarOpen} sx={{ p: 0 }}>
             <Avatar sx={{ bgcolor: "#2c3e50", width: 32, height: 32 }}>A</Avatar>

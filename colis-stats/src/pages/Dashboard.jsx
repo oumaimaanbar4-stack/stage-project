@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, Toolbar } from '@mui/material';
 import StatCard from '../components/StatCard';
 import MyPieChart from '../components/PieChart';
 import StatsFilters from "../components/StatsFilters";
@@ -7,77 +7,171 @@ import NavBar from "../components/NavBar";
 import PageTabs from "../components/PageTabs";
 import SendIcon from '@mui/icons-material/Send';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import BarChart from '../components/BarChart'; 
 import MapMorocco from '../components/MapMorocco';
+import Footer from '../components/Footer';
+
 import { useFilters } from "../context/FilterContext";
 
 const Dashboard = () => {
-  // Use the shared context instead of local state
+  
   const { filteredData , rawData , filters, setFilters, villesUniques, loading } = useFilters();
+
 
   const totalColisStable = rawData.length;
   const totalCrbtStable = rawData.reduce((acc, curr) => acc + (Number(curr.amountCrbt) || 0), 0);
+  
+  const monthlyDataArray = React.useMemo(() => {
+    const groups = {};
 
-  if (loading) return null; // Or a loading spinner
+    filteredData.forEach((item) => {
+      // 1. Get the month group using dateDepot
+      const dateValue = item.dateDepot; // Using the key from your JSON
+      if (!dateValue) return;
+
+      const date = new Date(dateValue);
+      const monthYear = date.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+
+      if (!groups[monthYear]) {
+        groups[monthYear] = { 
+          month: monthYear, 
+          envois: 0, 
+          crbt: 0, 
+          timestamp: date.getTime() 
+        };
+      }
+
+      // 2. Increment the shipment count
+      groups[monthYear].envois += 1;
+
+      // 3. FIX: Use the exact key 'amountCrbt' from your JSON
+      const val = parseFloat(item.amountCrbt || 0);
+      groups[monthYear].crbt += isNaN(val) ? 0 : val;
+    });
+
+    // 4. Sort by date to ensure the line flows correctly on the screen
+    return Object.values(groups).sort((a, b) => a.timestamp - b.timestamp);
+  }, [filteredData]);
+
+  if (loading) return null; 
 
   return (
     <>
-      <NavBar />
-      <Box sx={{ p: 3, backgroundColor: '#f4f6f8', minHeight: '100vh' }}>
-        
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1.5, mb: 2 }}>
-            <StatCard 
-              title="Nb. Colis affiché" 
-              value={totalColisStable} 
-              borderColor="#ff6d00" 
-              icon={<SendIcon sx={{ fontSize: 32, color: '#ff6d00', transform: 'rotate(-45deg)' }} />} 
-            />
-            <StatCard 
-              title="Total envois de la période" 
-              value={totalColisStable} 
-              borderColor="#fbc02d" 
-              icon={<LocalShippingIcon sx={{ fontSize: 32, color: '#fbc02d' }} />} 
-            />
-            <StatCard 
-              title="Total CRBT" 
-              value={new Intl.NumberFormat('fr-MA').format(totalCrbtStable) + ",00 MAD"} 
-              borderColor="#1e88e5" 
-              icon={<Box component="img" src="/photo/200dh.webp" sx={{ height: 30 }} alt="200dh" />} 
-            />
-          </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <NavBar />
+        <Toolbar />
+        <Box component="main" sx={{mt: 2, flexGrow: 1, p: 3, backgroundColor: '#f4f6f8', minHeight: '100vh' }}>
+          
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1.5, mb: 2 }}>
+              <StatCard 
+                title="Nb. Colis affiché" 
+                value={totalColisStable} 
+                borderColor="#ff6d00" 
+                icon={<SendIcon sx={{ fontSize: 32, color: '#ff6d00', transform: 'rotate(-45deg)' }} />} 
+              />
+              <StatCard 
+                title="Total envois de la période" 
+                value={totalColisStable} 
+                borderColor="#fbc02d" 
+                icon={<LocalShippingIcon sx={{ fontSize: 32, color: '#fbc02d' }} />} 
+              />
+              <StatCard 
+                title="Total CRBT" 
+                value={new Intl.NumberFormat('fr-MA').format(totalCrbtStable) + ",00 MAD"} 
+                borderColor="#1e88e5" 
+                icon={<Box component="img" src="/photo/200dh.webp" sx={{ height: 30 }} alt="200dh" />} 
+              />
+            </Box>
 
-        <Box sx={{ mb: 3, width: '100%', backgroundColor: '#fff', borderRadius: '4px' }}>
-          <PageTabs /> 
-        </Box> 
+          <Box sx={{ mb: 3, width: '100%', backgroundColor: '#fff', borderRadius: '4px' }}>
+            <PageTabs /> 
+          </Box> 
 
-        <StatsFilters 
-          filters={filters} 
-          onFilterChange={setFilters} 
-          villes={villesUniques} />
-        
-        <Grid container spacing={2} sx={{ mt: 1, mb: 3 }}>
-          {['statut', 'paiement', 'envois'].map((type) => (
-            <Grid item xs={12} md={4} key={type}>
-              <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="subtitle2" fontWeight="bold">
-                  {type === 'statut' ? 'Détail des statuts' : type === 'paiement' ? 'Statut des Paiements' : 'Statut des envois'}
+          <Paper elevation={1} sx={{ borderRadius: '4px', overflow: 'hidden' }}>
+            <Box sx={{ p: 2, borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>
+              <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1.5, color: "black", fontSize: '0.85rem' }}>
+                Mes statistiques
+              </Typography>
+              <StatsFilters 
+                filters={filters} 
+                onFilterChange={setFilters} 
+                villes={villesUniques} 
+              />
+            </Box>
+          
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+              gap: 1.5, 
+              mb: 2 
+            }}>
+              {['statut', 'paiement', 'envois'].map((type) => (
+                <Paper 
+                  key={type}
+                  elevation={1} 
+                  sx={{ 
+                    p: 2, 
+                    borderRadius: 0, 
+                    backgroundColor: 'white',
+                    height: '350px', 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      color: 'black', 
+                      fontWeight: 700, 
+                      fontSize: '0.75rem', 
+                      mb: 2,
+                      textAlign: 'center',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    {type === 'statut' ? 'Détail des statuts' : 
+                    type === 'paiement' ? 'Statut des Paiements' : 
+                    'Statut des envois'}
+                  </Typography>
+                  
+                  <Box sx={{ flexGrow: 1, width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <MyPieChart data={filteredData} type={type} />
+                  </Box>
+                </Paper>
+              ))}
+            </Box>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, 
+              gap: 3, 
+              mt: 8, 
+              
+            }}>
+              
+              <Paper elevation={0} sx={{ p: 2, borderRadius: "30px", height: '400px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.08)' }}>
+                <Typography variant="caption" sx={{ fontWeight: 700, mb: 1, display: 'block', textTransform: 'uppercase' }}>
+                  Statistiques d'Envois Mensuels
                 </Typography>
-                <MyPieChart data={filteredData} type={type} />
+                <Box sx={{ flexGrow: 1, width: '100%', overflow: 'hidden' }}>
+                  <BarChart data={monthlyDataArray} />
+                </Box>
               </Paper>
-            </Grid>
-          ))}
-        </Grid>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 3, height: 420 }}>
-              <Typography variant="subtitle2" fontWeight="bold">Carte du Maroc</Typography>
-              <Box sx={{ height: '320px', mt: 2 }}>
-                <MapMorocco data={filteredData} />
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
+              <Paper elevation={0} sx={{ p: 2, borderRadius: "30px", height: '400px', display: 'flex', flexDirection: 'column', backgroundColor: 'white',
+              boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.08)' }}>
+                <Typography variant="caption" sx={{ fontWeight: 700, mb: 1, display: 'block', textTransform: 'uppercase' }}>
+                  Répartition Géographique
+                </Typography>
+                <Box sx={{ flexGrow: 1, width: '100%', borderRadius: '4px', overflow: 'hidden' }}>
+                  <MapMorocco />
+                </Box>
+              </Paper>
+            </Box>
+          </Paper>
+          <Footer />
+        </Box>
+      </Box>  
     </>
   );
 };
