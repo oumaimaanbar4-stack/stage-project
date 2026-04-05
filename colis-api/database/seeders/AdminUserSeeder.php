@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
         User::create([
             'name' => 'Admin Amana',
             'email' => 'admin@amana.ma',
-            'password' => Hash::make('password123'), // Encrypts the password for security
+            'password' => Hash::make('password123'), 
         ]);
     }
 }

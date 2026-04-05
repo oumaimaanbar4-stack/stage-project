@@ -3,11 +3,10 @@ import { Paper, Box, Typography } from '@mui/material';
 
 const StatCard = ({ title, value, icon, borderColor }) => (
   <Paper 
-    // Changing elevation to 0 to use a custom shadow instead
     elevation={0} 
     sx={{ 
       p: 1.5,
-      borderRadius: '8px', // Increased for a softer look
+      borderRadius: '8px',
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'space-between', 
@@ -16,11 +15,10 @@ const StatCard = ({ title, value, icon, borderColor }) => (
       height: '100%',
       minHeight: '85px',
       boxSizing: 'border-box',
-      // Stronger shadow to ensure it's visible on grey backgrounds
       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', 
       transition: 'transform 0.2s ease-in-out',
       '&:hover': {
-        transform: 'translateY(-2px)', // Adds a small lift effect
+        transform: 'translateY(-2px)',
         boxShadow: '0px 6px 25px rgba(0, 0, 0, 0.15)',
       }
     }}
@@ -36,7 +34,7 @@ const StatCard = ({ title, value, icon, borderColor }) => (
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          textTransform: 'uppercase' // Matches your dashboard headers
+          textTransform: 'uppercase'
         }}
       >
         {title}

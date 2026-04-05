@@ -27,7 +27,7 @@ const MyPieChart = ({ data, type }) => {
     if (type === 'envois') {
       return [
         { id: 0, label: 'Livré', value: data.filter(d => d.dernierStatut === 'liv').length, color: '#2d6a4f' },
-        { id: 1, label: 'En cours', value: data.filter(d => d.dernierStatut === 'aexp').length, color: '#808080' },
+        { id: 1, label: 'En cours', value: data.filter(d => d.dernierStatut === 'enc').length, color: '#808080' },
         { id: 2, label: 'Retour', value: data.filter(d => d.dernierStatut === 'ret').length, color: '#FF0000' },
       ];
     }

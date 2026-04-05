@@ -14,7 +14,7 @@ const getStatusIcon = (status) => {
   let color = '#ff9800'; // Orange (Default / Transit)
   if (status === 'liv') color = '#2e7d32'; // Green (Livré)
   if (status === 'ret') color = '#d32f2f'; // Red (Retour)
-  if (status === 'aff') color = '#1e88e5'; // Blue (En cours)
+  if (status === 'enc') color = '#1e88e5'; // Blue (En cours)
 
   return L.divIcon({
     className: 'custom-div-icon', 

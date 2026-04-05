@@ -1,10 +1,13 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from 'react';
-import dayjs from 'dayjs'; // Ensure dayjs is imported
+import dayjs from 'dayjs'; 
+import api from '../services/api';
+import axios from 'axios';
 
 const FilterContext = createContext();
 
 export const FilterProvider = ({ children }) => {
   const [rawData, setRawData] = useState([]);
+  const [envois, setEnvois] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     codeEnvoi: '',
@@ -21,29 +24,46 @@ export const FilterProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    fetch('/data/command.json')
-      .then((res) => res.json())
-      .then((json) => {
-        setRawData(json);
+    const fetchEnvois = async () => {
+      setLoading(true);
+      try {
+        // Bypasses browser cache by making the URL unique
+        const response = await axios.get(`http://localhost:8000/api/shipments?t=${new Date().getTime()}`);
+
+        // If Laravel sends back the full object (including the debug info we added)
+        // make sure you access the correct property, e.g., response.data.all_data
+        // But if you reverted the Controller to just return the list, response.data is fine.
+        const data = response.data.all_data || response.data;
+
+        setEnvois(data); 
+        setRawData(data); // KEEP THIS: It's your filter backup!
+      } catch (err) {
+        console.error("Erreur de récupération des envois:", err);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => console.error("Error loading JSON:", err));
-  }, []);
+      }
+    };
+
+    fetchEnvois();
+  }, []); // Empty dependency array means this runs once on page load
 
   const filteredData = useMemo(() => {
     return rawData.filter((item) => {
-      // 1. STATUT LOGIC
-      const statusValue = filters.statut; 
-      const itemCode = item.dernierStatut || ""; 
-      const matchStatut = 
-        statusValue === 'Tout statut' || 
-        itemCode === statusValue || 
-        (statusValue === "liv" && itemCode === "liv") ||
-        (statusValue === "ret" && itemCode === "ret") ||
-        (statusValue === "enc" && itemCode === "aff") ||
-        (statusValue === "tra" && (itemCode === "aexp"));
+      const statusValue = filters.statut ? filters.statut.toLowerCase() : 'tout statut'; 
 
-      // 2. RANGE FILTER LOGIC (NEW)
+      const matchStatut = 
+        statusValue === 'tout statut' || 
+        
+        (item.dernierStatut && item.dernierStatut.toLowerCase() === statusValue) || 
+        
+        (statusValue === "aff" && (item.dernierStatut?.toLowerCase() === "enc" || item.dernierStatut?.toLowerCase() === "aff")) ||
+      
+        (statusValue === "aexp" && (item.dernierStatut?.toLowerCase() === "tra" || item.dernierStatut?.toLowerCase() === "aexp")) ||
+     
+        (statusValue === "liv" && item.dernierStatut?.toLowerCase() === "liv") ||
+       
+        (statusValue === "ret" && item.dernierStatut?.toLowerCase() === "ret");
+
       const checkInRange = (start, end, itemDateValue) => {
         if (!start && !end) return true;
         if (!itemDateValue) return false;
@@ -64,8 +84,8 @@ export const FilterProvider = ({ children }) => {
       };
 
       const matchDateDepot = checkInRange(filters.dateDepotStart, filters.dateDepotEnd, item.dateDepot);
-      const matchDateStatut = checkInRange(filters.dateStatutStart, filters.dateStatutEnd, item.dateLastStatus || item.dateStatut);
-      const matchDatePaiement = compareSingleDate(filters.datePaiement, item.datePaiement || item.paye);
+      const matchDateStatut = checkInRange(filters.dateStatutStart, filters.dateStatutEnd, item.dateLastStatus); 
+      const matchDatePaiement = compareSingleDate(filters.datePaiement, item.datePaiement);
 
       // 4. PAIEMENT & CRBT
       const isPayed = item.datePaiement !== null || item.paye !== null;
@@ -81,12 +101,12 @@ export const FilterProvider = ({ children }) => {
         (filters.crbt === 'Sans' && !hasCrbt);
 
       // 5. VILLE & SEARCH
-      const itemVille = item.libville || item.city || item.ville || "";
-      const matchVille = filters.ville === 'Toute destination' || itemVille === filters.ville;
+      const itemVille = (item.libville || item.city || item.ville || "").toUpperCase();
+      const matchVille = filters.ville === 'Toute destination' || itemVille === filters.ville.toUpperCase();
       const matchCode = filters.codeEnvoi === '' || 
         (item.codeBordereau && item.codeBordereau.toLowerCase().includes(filters.codeEnvoi.toLowerCase()));
       const matchTel = filters.telephone === '' || 
-        (item.telDest && item.telDest.includes(filters.telephone));
+       (item.telDest && String(item.telDest).trim().includes(filters.telephone));
       
       return matchStatut && matchDateDepot && matchDateStatut && matchDatePaiement && 
              matchPaiement && matchCrbt && matchVille && matchCode && matchTel;
@@ -94,7 +114,11 @@ export const FilterProvider = ({ children }) => {
   }, [rawData, filters]);
 
   const villesUniques = useMemo(() => {
-    return [...new Set(rawData.map(item => item.libville || item.city || item.ville))].filter(Boolean);
+    const transformed = rawData.map(item => {
+      const val = item.libville || item.city || item.ville || "";
+      return val.trim().toUpperCase(); 
+    });
+    return [...new Set(transformed)].filter(Boolean).sort();
   }, [rawData]);
 
   const value = { filters, setFilters, filteredData, rawData, villesUniques, loading };

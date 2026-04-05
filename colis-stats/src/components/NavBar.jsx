@@ -15,7 +15,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 
-const NavBar = () => {
+const NavBar = ({ user }) => {
   const navigate = useNavigate();
 
   
@@ -87,21 +87,21 @@ const NavBar = () => {
               Demandes De Modifications
             </MenuItem>
 
-            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/creer"); }}>
+            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/clients"); }}>
               <ListItemIcon>
                 <PersonAddIcon fontSize="small" />
               </ListItemIcon>
               Créer Un Client
             </MenuItem>
 
-            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/create-user"); }}>
+            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/utilisateur"); }}>
               <ListItemIcon>
                 <GroupAddIcon fontSize="small" />
               </ListItemIcon>
               Créer Un Utilisateur
             </MenuItem>
 
-            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/users"); }}>
+            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/utilisateurs"); }}>
               <ListItemIcon>
                 <GroupsIcon fontSize="small" />
               </ListItemIcon>
@@ -112,12 +112,13 @@ const NavBar = () => {
 
           <Box>
             <Typography variant="caption" sx={{ fontWeight: "bold", display: "block" }}>
-              Bienvenue: admin
+              Bienvenue: {user?.name || '...'}
             </Typography>
-            <Typography variant="caption">Profil: Client</Typography>
+            <Typography variant="caption">
+              Profil: {user?.role || '...'}
+            </Typography>
           </Box>
         </Box>
-
         {/* LOGO CENTRAL */}
         <Box 
           onClick={() => navigate("/dashboard")} 
@@ -134,7 +135,7 @@ const NavBar = () => {
 
         <Box>
           <IconButton onClick={handleAvatarOpen} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: "#2c3e50", width: 32, height: 32 }}>A</Avatar>
+            <Avatar sx={{ bgcolor: "#2c3e50", width: 32, height: 32 }}>{user?.name?.charAt(0).toUpperCase() || 'A'}</Avatar>
           </IconButton>
 
           <Menu

@@ -37,9 +37,9 @@ export default function PageTabs() {
         <Tab label="Mes envois" value="/envois" />
         <Tab label="Mes demandes de modification" value="" />
         <Tab label="demandes de modifications" value="" />
-        <Tab label="creer un client" value="/creer" />
-        <Tab label="creer un utilisateur" value="" />
-        <Tab label="liste d'utilisateurs" value="" />
+        <Tab label="creer un client" value="/clients" />
+        <Tab label="creer un utilisateur" value="/utilisateur" />
+        <Tab label="liste d'utilisateurs" value="/utilisateurs" />
       </Tabs>
     </Box>
   );

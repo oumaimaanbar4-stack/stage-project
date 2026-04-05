@@ -14,15 +14,15 @@ export default function Login() {
     e.preventDefault();
     try {
         const response = await api.post('/login', {
-            email: email, // from your state
-            password: password // from your state
+            email: email, 
+            password: password 
         });
 
-        // Save data
+        
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
-        // Go to dashboard
+        
         navigate('/dashboard');
     } catch (error) {
         console.error("Login Error:", error.response?.data?.message);
