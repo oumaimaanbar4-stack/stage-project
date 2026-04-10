@@ -80,7 +80,7 @@ const NavBar = ({ user }) => {
               Mes Demandes De Modification
             </MenuItem>
 
-            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/demandes"); }}>
+            <MenuItem onClick={() => { handleHamburgerClose(); navigate("/demandes-modification"); }}>
               <ListItemIcon>
                 <FactCheckIcon fontSize="small" />
               </ListItemIcon>

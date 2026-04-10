@@ -12,6 +12,7 @@ import CreerShipment from "./pages/CreerShipment";
 import Clients from "./pages/Clients";
 import Profile from "./pages/Profile";
 import ListeBord from "./pages/ListeBord";
+import DemandesDeModif from "./pages/DemandesDeModif";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/bordereaux/:clientId" element={<ListeBord />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/demandes-modification" element={<DemandesDeModif />} />
            
           </Route>
 

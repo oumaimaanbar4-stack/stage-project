@@ -36,7 +36,7 @@ export default function PageTabs() {
         <Tab label="Mes statistiques" value="/dashboard" />
         <Tab label="Mes envois" value="/envois" />
         <Tab label="Mes demandes de modification" value="" />
-        <Tab label="demandes de modifications" value="" />
+        <Tab label="demandes de modifications" value="/demandes-modification" />
         <Tab label="creer un client" value="/clients" />
         <Tab label="creer un utilisateur" value="/utilisateur" />
         <Tab label="liste d'utilisateurs" value="/utilisateurs" />

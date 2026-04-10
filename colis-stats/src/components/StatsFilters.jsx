@@ -18,21 +18,21 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
     onFilterChange({ ...filters, [field]: value });
   };
 
-const handleDateRangeChange = (startKey, endKey, newValue) => {
-  
-  if (!filters[startKey] || (filters[startKey] && filters[endKey])) {
-    onFilterChange({ 
-      ...filters, 
-      [startKey]: newValue, 
-      [endKey]: null 
-    });
-  } else {
-    onFilterChange({ 
-      ...filters, 
-      [endKey]: newValue 
-    });
-  }
-};
+  const handleDateRangeChange = (startKey, endKey, newValue) => {
+    
+    if (!filters[startKey] || (filters[startKey] && filters[endKey])) {
+      onFilterChange({ 
+        ...filters, 
+        [startKey]: newValue, 
+        [endKey]: null 
+      });
+    } else {
+      onFilterChange({ 
+        ...filters, 
+        [endKey]: newValue 
+      });
+    }
+  };
 
 
   const UnderlinedDateRange = ({ label, startKey, endKey }) => (
@@ -102,7 +102,14 @@ const handleDateRangeChange = (startKey, endKey, newValue) => {
             value={filters.codeEnvoi || ''}
             onChange={(e) => handleChange('codeEnvoi', e.target.value)}
             InputProps={{
-              endAdornment: <InputAdornment position="end"><SearchIcon fontSize="small" /></InputAdornment>,
+              endAdornment:(
+                <InputAdornment position="end">
+                  <SearchIcon 
+                    fontSize="small" 
+                    sx={{ color: filters.codeEnvoi ? '#2563eb' : 'inherit' }} 
+                  />
+                </InputAdornment>
+              ),
             }}
           />
 
@@ -113,19 +120,60 @@ const handleDateRangeChange = (startKey, endKey, newValue) => {
             value={filters.telephone || ''}
             onChange={(e) => handleChange('telephone', e.target.value)}
             InputProps={{
-              endAdornment: <InputAdornment position="end"><SearchIcon fontSize="small" /></InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon 
+                    fontSize="small" 
+                    sx={{ color: filters.telephone ? '#2563eb' : 'inherit' }} 
+                  />
+                </InputAdornment>),
             }}
           />
 
           <UnderlinedDateRange label="Date dépôt" startKey="dateDepotStart" endKey="dateDepotEnd" />
           <UnderlinedDateRange label="Date statut" startKey="dateStatutStart" endKey="dateStatutEnd" />
 
-          <DatePicker
-            label="Date paiement"
-            value={filters.datePaiement || null}
-            onChange={(newValue) => handleChange('datePaiement', newValue)}
-            slotProps={{ textField: { size: "small", sx: fieldStyle } }}
-          />
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: 210 }}>
+          <Typography sx={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', mb: 0.2 }}>
+            Date paiement
+          </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #cbd5e1', 
+            height: 32, 
+            px: 0.5
+          }}>
+            <Typography sx={{ fontSize: '0.8rem', color: '#1e293b' }}>
+              {filters.datePaiement ? filters.datePaiement.format('MM/DD/YYYY') : 'MM/DD/YYYY'}
+            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton 
+                size="small" 
+                sx={{ p: 0.2, mr: 0.5 }} 
+                onClick={() => handleChange('datePaiement', null)}
+              >
+                <RestartAltIcon sx={{ fontSize: 16, color: '#1e3a8a' }} />
+              </IconButton>
+
+              <DatePicker
+                value={filters.datePaiement || null}
+                onChange={(val) => handleChange('datePaiement', val)}
+                slotProps={{
+                  textField: {
+                    variant: 'standard',
+                    InputProps: { disableUnderline: true },
+                    sx: { width: '24px', '& .MuiInputBase-input': { display: 'none' } }
+                  }
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+          
 
           <TextField select size="small" label="Statut" sx={fieldStyle} value={filters.statut} onChange={(e) => handleChange('statut', e.target.value)}>
             <MenuItem value="Tout statut">Tout statut</MenuItem>

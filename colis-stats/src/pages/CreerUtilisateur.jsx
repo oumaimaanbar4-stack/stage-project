@@ -12,7 +12,7 @@ const CreerUtilisateur = () => {
         name: '',
         email: '',
         password: '',
-        role: 'client' 
+        role: 'user' 
     });
     const [status, setStatus] = useState({ type: '', msg: '' });
     const [user, setUser] = useState({ name: '', role: '' });
@@ -78,8 +78,9 @@ const CreerUtilisateur = () => {
                                         label="Rôle"
                                         onChange={(e) => setFormData({...formData, role: e.target.value})}
                                     >
-                                        <MenuItem value="admin">Administrateur</MenuItem>
-                                        <MenuItem value="client">Client</MenuItem>
+                                        <MenuItem value="admin">Admin</MenuItem>
+                                        <MenuItem value="manager">Manager</MenuItem>
+                                        <MenuItem value="user">Utilisateur </MenuItem>
                                         <MenuItem value="livreur">Livreur</MenuItem>
                                     </Select>
                                 </FormControl>

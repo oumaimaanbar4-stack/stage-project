@@ -15,7 +15,7 @@ import { useFilters } from "../context/FilterContext";
 
 const Dashboard = () => {
   
-  const { filteredData, filters, setFilters, villesUniques, loading } = useFilters();
+  const { filteredData,rawData, filters, setFilters, villesUniques, loading } = useFilters();
   const [user, setUser] = useState({ name: '', role: '' });
   useEffect(() => {
     api.get('/user')
@@ -25,6 +25,7 @@ const Dashboard = () => {
 
 
   const totalColisStable = filteredData.length;
+  const totalEnvoisPeriode = rawData.length; 
   const totalCrbtStable = filteredData.reduce((acc, curr) => {
     const val = curr.amountCrbt || curr.montant_crbt || 0;
     return acc + (parseFloat(val) || 0);
@@ -70,7 +71,7 @@ const Dashboard = () => {
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1.5, mb: 2 }}>
               <StatCard 
                 title="Nb. Colis affiché" 
-                value={totalColisStable} 
+                value={totalEnvoisPeriode} 
                 borderColor="#ff6d00" 
                 icon={<SendIcon sx={{ fontSize: 32, color: '#ff6d00', transform: 'rotate(-45deg)' }} />} 
               />

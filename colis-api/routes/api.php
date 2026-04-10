@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\ModificationRequestController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -19,6 +20,9 @@ Route::post('/shipments', [ShipmentController::class, 'store']); // Create new s
 Route::get('/shipments', [ShipmentController::class, 'index']); // Get all shipments with client info
 Route::put('/shipments/{id}/status', [ShipmentController::class, 'updateStatus']); // Update status
 Route::get('/clients/{id}/bordereaux', [ClientController::class, 'getBordereaux']);
+
+Route::get('/modification-requests', [ModificationRequestController::class, 'index']);
+Route::post('/modification-requests', [ModificationRequestController::class, 'store']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class Client extends Model
 {
     // Important: Change primary key to 'id' if you used $table->id() in migration
@@ -21,4 +22,5 @@ class Client extends Model
     {
         return $this->hasMany(Shipment::class, 'client_id');
     }
+  
 }

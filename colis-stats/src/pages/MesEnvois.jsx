@@ -17,7 +17,7 @@ import api from "../services/api";
 
 export default function MesEnvois() {
   
-  const { filteredData, filters, setFilters, villesUniques, loading } = useFilters();
+  const { filteredData,rawData, filters, setFilters, villesUniques, loading } = useFilters();
   const [user, setUser] = useState({ name: '', role: '' });
   useEffect(() => {
     api.get('/user')
@@ -77,7 +77,7 @@ export default function MesEnvois() {
       valueFormatter: (value) => value ? dayjs(value).format('DD/MM/YYYY') : '-'
     },
     { field: 'nomDest', headerName: 'Nom destinataire', width: 150 },
-    { field: 'telDest', headerName: 'Téléphone dest', width: 150 },
+    { field: 'telDest', headerName: 'Téléphone Dest', width: 150 },
     { field: 'adresseDest', headerName: 'Adresse-dest', width: 200 },
     { 
       field: 'actions', 
@@ -105,6 +105,7 @@ export default function MesEnvois() {
   ];
   
   const totalColisStable= filteredData.length;
+  const totalEnvoisPeriode= rawData.length;
   const totalCrbtStable = filteredData.reduce((acc, curr) => {
     const val = curr.amountCrbt || curr.montant_crbt || 0;
     return acc + (parseFloat(val) || 0);
@@ -156,7 +157,7 @@ export default function MesEnvois() {
             />
             <StatCard 
               title="Total envois de la période" 
-              value={totalColisStable} 
+              value={totalEnvoisPeriode} 
               borderColor="#fbc02d" 
               icon={<LocalShippingIcon sx={{ fontSize: 32, color: '#fbc02d' }} />} 
             />

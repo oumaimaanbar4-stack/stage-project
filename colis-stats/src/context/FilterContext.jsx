@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from 'react';
 import dayjs from 'dayjs'; 
-import api from '../services/api';
 import axios from 'axios';
 
 const FilterContext = createContext();
@@ -27,12 +26,8 @@ export const FilterProvider = ({ children }) => {
     const fetchEnvois = async () => {
       setLoading(true);
       try {
-        // Bypasses browser cache by making the URL unique
         const response = await axios.get(`http://localhost:8000/api/shipments?t=${new Date().getTime()}`);
 
-        // If Laravel sends back the full object (including the debug info we added)
-        // make sure you access the correct property, e.g., response.data.all_data
-        // But if you reverted the Controller to just return the list, response.data is fine.
         const data = response.data.all_data || response.data;
 
         setEnvois(data); 
@@ -88,7 +83,10 @@ export const FilterProvider = ({ children }) => {
       const matchDatePaiement = compareSingleDate(filters.datePaiement, item.datePaiement);
 
       // 4. PAIEMENT & CRBT
-      const isPayed = item.datePaiement !== null || item.paye !== null;
+      const isPayed = item.datePaiement && 
+                item.datePaiement !== "" && 
+                item.datePaiement !== "0000-00-00" && 
+                item.datePaiement !== "null";
       const matchPaiement = 
         filters.paiement === 'Paiement' || 
         (filters.paiement === 'Payé' && isPayed) || 

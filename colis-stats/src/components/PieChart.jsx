@@ -8,25 +8,24 @@ const MyPieChart = ({ data, type }) => {
   const getChartData = () => {
     if (type === 'statut') {
       const livre = data.filter(d => d.dernierStatut === 'liv').length;
-      const transit = data.filter(d => d.dernierStatut === 'aexp').length;
+      const transit = data.filter(d => d.dernierStatut === 'aexp'|| d.dernierStatut === 'tra').length;
       return [
-        { id: 0, label: 'Livré', value: livre, color: '#000000' },
-        { id: 1, label: 'Transit', value: transit, color: '#333333' },
+        { id: 0, label: 'Livré', value: livre, color: '#059669' },
+        { id: 1, label: 'Transit', value: transit, color: '#2563eb' },
       ];
     }
 
     if (type === 'paiement') {
       const paye = data.filter(d => d.datePaiement).length;
-      // Removed the 'const impaye' line that was causing the warning
       return [
         { id: 0, label: 'Payé', value: paye, color: '#0066FF' },
-        { id: 1, label: 'Impayé', value: total - paye, color: '#FF0000' }, // Use math instead of a new variable
+        { id: 1, label: 'Impayé', value: total - paye, color: '#FF0000' }, 
       ];
     }
 
     if (type === 'envois') {
       return [
-        { id: 0, label: 'Livré', value: data.filter(d => d.dernierStatut === 'liv').length, color: '#2d6a4f' },
+        { id: 0, label: 'Livré', value: data.filter(d => d.dernierStatut === 'liv').length, color: '#059669' },
         { id: 1, label: 'En cours', value: data.filter(d => d.dernierStatut === 'enc').length, color: '#808080' },
         { id: 2, label: 'Retour', value: data.filter(d => d.dernierStatut === 'ret').length, color: '#FF0000' },
       ];
@@ -62,9 +61,9 @@ const MyPieChart = ({ data, type }) => {
         ]}
         sx={{
           '& .MuiPieArcLabel-root': {
-            fill: 'white',
-            fontWeight: 400,
-            fontSize: '11px',
+            fill:'#1e293b',
+            fontWeight: '900',
+            fontSize: '13px',
           },
         }}
         height={250}
