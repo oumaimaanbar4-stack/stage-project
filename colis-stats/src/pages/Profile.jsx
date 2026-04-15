@@ -20,7 +20,7 @@ const Profile = () => {
     email: '',
     role: '',
     joined: '',
-    location: 'Casablanca, Maroc'
+    location: 'Rabat, Maroc'
   });
   const [stats, setStats] = useState({
     shipments: 0,
@@ -58,7 +58,7 @@ const Profile = () => {
       <NavBar user={user} />
       <Toolbar /> 
       
-      <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
+      <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1100, mx: 'auto' }}>
         <Paper elevation={0} sx={{ p: 4, borderRadius: 4, mb: 4, bgcolor: '#1a237e', color: 'white' }}>
           <Grid container spacing={3} alignItems="center">
             <Grid item>

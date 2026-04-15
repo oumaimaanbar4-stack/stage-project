@@ -15,14 +15,33 @@ const SettingsPage = () => {
       .catch(err => console.error(err));
   }, []);
 
-  const handleSave = () => {
-  
+  const handleSave = async () => {
+    setStatus({ type: "", msg: "" });
+
     if (passwords.new !== passwords.confirm) {
-      setStatus({ type: "error", msg: "Les mots de passe ne correspondent pas !" });
+      setStatus({ type: "error", msg: "Les nouveaux mots de passe ne correspondent pas !" });
       return;
     }
-    
-    setStatus({ type: "success", msg: "Modification simulée ! (Nécessite une base de données pour être réelle)" });
+
+    if (passwords.new.length < 8) {
+      setStatus({ type: "error", msg: "Le nouveau mot de passe doit faire au moins 8 caractères." });
+      return;
+    }
+
+    try {
+      const response = await api.put('/user/update-password', {
+        current_password: passwords.current,
+        new_password: passwords.new,
+        confirm_password: passwords.confirm
+      });
+
+      setStatus({ type: "success", msg: response.data.message });
+      setPasswords({ current: "", new: "", confirm: "" });
+      
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "Une erreur est survenue lors de la mise à jour.";
+      setStatus({ type: "error", msg: errorMsg });
+    }
   };
 
   return (

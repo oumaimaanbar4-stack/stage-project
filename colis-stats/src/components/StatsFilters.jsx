@@ -9,7 +9,8 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
   
   
   const fieldStyle = { 
-    width: 210, 
+    width:'100%', 
+    maxWidth: 290,
     '& .MuiInputBase-root': { height: 40 }, 
     '& .MuiInputLabel-root': { fontSize: '0.85rem' }
   };
@@ -134,7 +135,7 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
           <UnderlinedDateRange label="Date statut" startKey="dateStatutStart" endKey="dateStatutEnd" />
 
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: 210 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: 150 }}>
           <Typography sx={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', mb: 0.2 }}>
             Date paiement
           </Typography>

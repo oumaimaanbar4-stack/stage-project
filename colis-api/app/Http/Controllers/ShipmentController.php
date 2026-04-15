@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class ShipmentController extends Controller
 {
-    // For MesEnvois.jsx - Fetch everything with the Client info
     public function index()
     {
-        // 'client' is the name of the function in your Shipment Model
         return response()->json(Shipment::with('client')->get());
     }
 
-    // For your "New Shipment" form
+    
     public function store(Request $request)
     {
         $validated = $request->validate([

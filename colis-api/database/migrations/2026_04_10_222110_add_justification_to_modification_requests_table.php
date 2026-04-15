@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
-            $table->id(); // Use standard id() for the foreign key link
-            $table->string('nom');
-            $table->string('telephone')->unique();
-            $table->string('adresse');
-            $table->timestamps();
-           
+        Schema::table('modification_requests', function (Blueprint $table) {
+            $table->text('justification')->nullable()->after('nouvelle_valeur');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::table('modification_requests', function (Blueprint $table) {
+            //
+        });
     }
 };

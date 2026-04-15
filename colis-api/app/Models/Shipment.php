@@ -38,4 +38,8 @@ class Shipment extends Model
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
+    public function modificationRequests()
+    {
+        return $this->hasMany(ModificationRequest::class, 'code_envoi', 'codeBordereau');
+    }
 }

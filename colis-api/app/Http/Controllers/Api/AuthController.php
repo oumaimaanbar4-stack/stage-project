@@ -22,6 +22,12 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
+        // Security check: Prevent archived users from logging in
+        if ($user->trashed()) {
+            return response()->json(['message' => 'Ce compte est supprimé.'], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -30,9 +36,9 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+
     public function register(Request $request)
     {
-        // Check if the person creating the user is actually an Admin
         if ($request->user()->role !== 'Admin') {
             return response()->json(['message' => 'Action non autorisée'], 403);
         }
@@ -57,9 +63,29 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function archivedUsers()
+    {
+        return response()->json(User::onlyTrashed()->get());
+    }
+
+    public function restoreUser($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore();
+
+        return response()->json(['message' => 'Utilisateur restauré avec succès']);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'Utilisateur archivé avec succès']);
+    }
+
     public function logout(Request $request)
     {
-        // Deletes the token so it can't be used again
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Déconnecté']);
     }

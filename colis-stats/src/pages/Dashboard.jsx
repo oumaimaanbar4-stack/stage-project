@@ -68,22 +68,22 @@ const Dashboard = () => {
         <Toolbar />
         <Box component="main" sx={{mt: 2, flexGrow: 1, p: 3, backgroundColor: '#f4f6f8', minHeight: '100vh' }}>
           
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1.5, mb: 2 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 1.5, mb: 2 }}>
               <StatCard 
                 title="Nb. Colis affiché" 
-                value={totalEnvoisPeriode} 
+                value={totalColisStable} 
                 borderColor="#ff6d00" 
                 icon={<SendIcon sx={{ fontSize: 32, color: '#ff6d00', transform: 'rotate(-45deg)' }} />} 
               />
               <StatCard 
                 title="Total envois de la période" 
-                value={totalColisStable} 
+                value={totalEnvoisPeriode} 
                 borderColor="#fbc02d" 
                 icon={<LocalShippingIcon sx={{ fontSize: 32, color: '#fbc02d' }} />} 
               />
               <StatCard 
                 title="Total CRBT" 
-                value={new Intl.NumberFormat('fr-MA').format(totalCrbtStable) + "MAD"} 
+                value={new Intl.NumberFormat('fr-MA').format(totalCrbtStable) + " MAD"} 
                 borderColor="#1e88e5" 
                 icon={<Box component="img" src="/photo/200dh.webp" sx={{ height: 30 }} alt="200dh" />} 
               />

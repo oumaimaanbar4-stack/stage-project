@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    // To show the list in your React dropdown/select
+
     public function index()
     {
         return response()->json(Client::all());
     }
 
-    // To add a new sender to the database
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -23,12 +23,14 @@ class ClientController extends Controller
         ]);
 
         $client = Client::create($validated);
+        
 
         return response()->json([
             'message' => 'Client (Expéditeur) créé avec succès !',
             'data' => $client
         ], 201);
     }
+
     public function show($id)
     {
         $client = Client::find($id);
@@ -42,5 +44,22 @@ class ClientController extends Controller
     {
         $shipments = \App\Models\Shipment::where('client_id', $id)->get();
         return response()->json($shipments);
+    }
+    public function destroy($id)
+    {
+        $client = Client::findOrFail($id);
+        $client->delete();
+        return response()->json(['message' => 'Client archivé']);
+    }
+    public function archived()
+    {
+        $clients = Client::onlyTrashed()->with('shipments')->get();
+        return response()->json($clients);
+    }
+    public function restore($id)
+    {
+        $client = Client::onlyTrashed()->findOrFail($id);
+        $client->restore();
+        return response()->json(['message' => 'Client restauré']);
     }
 }

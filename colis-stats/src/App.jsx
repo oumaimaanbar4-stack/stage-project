@@ -13,6 +13,9 @@ import Clients from "./pages/Clients";
 import Profile from "./pages/Profile";
 import ListeBord from "./pages/ListeBord";
 import DemandesDeModif from "./pages/DemandesDeModif";
+import MesDemandeDeModif from "./pages/MesDemandeDeModif";
+import ArchivedClients from "./pages/ArchivedClients";
+import ArchivedUsers from './pages/ArchivedUsers';
 
 function App() {
   return (
@@ -36,7 +39,10 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/demandes-modification" element={<DemandesDeModif />} />
-           
+            <Route path ="/modifications" element={<MesDemandeDeModif/>}/>
+            <Route path="/clients/archived" element={<ArchivedClients />} />
+            <Route path="/utilisateurs/archives" element={<ArchivedUsers />} />
+
           </Route>
 
        

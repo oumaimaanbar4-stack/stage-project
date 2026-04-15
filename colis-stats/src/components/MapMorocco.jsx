@@ -45,7 +45,8 @@ const cityCoords = {
   "AGADIR": [30.4278, -9.5981],
   "KENITRA": [34.2610, -6.5802],
   "DAKHLA OUED EDDAHAB": [23.6848, -15.9579], 
-  "LAAYOUNE": [27.1253, -13.1625]
+  "LAAYOUNE": [27.1253, -13.1625],
+  "MEKNES": [33.8935, -5.5473]
 };
 
 const MapMorocco = () => {
@@ -65,7 +66,6 @@ const MapMorocco = () => {
       <Box sx={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         <MapContainer center={[28.5, -9.5]} zoom={5} style={{ height: '100%', width: '100%' }}>
           
-          {/* Using CartoDB Light tiles: These are cleaner and don't show disputed labels */}
           <TileLayer 
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" 
             attribution='&copy; OpenStreetMap'

@@ -11,6 +11,11 @@ class ModificationRequest extends Model
         'champ',
         'ancienne_valeur',
         'nouvelle_valeur',
+        'justification',
         'status',
     ];
+    public function shipment()
+    {
+        return $this->belongsTo(Shipment::class, 'code_envoi', 'codeBordereau');
+    }
 }

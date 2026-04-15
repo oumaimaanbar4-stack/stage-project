@@ -19,9 +19,16 @@ const ListeUtilisateurs = () => {
         console.log("Modifier l'utilisateur:", user);
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) {
-            console.log("Supprimer l'ID:", id);
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Voulez-vous vraiment archiver cet utilisateur ?")) {
+            try {
+                await api.delete(`/users/${id}`); 
+                setUsers(users.filter(u => u.id !== id)); 
+            } catch (error) {
+                console.error("Erreur lors de l'archivage:", error);
+                alert("Impossible d'archiver l'utilisateur.");
+            }
         }
     };
 
@@ -81,7 +88,7 @@ const ListeUtilisateurs = () => {
                     title="Modifier"
                 >
                     <EditIcon fontSize="small" />
-                    <Typography variant="caption" sx={{ ml: 0.5, fontWeight: 'bold', textTransform: 'uppercase' }}>
+                    <Typography variant="caption" sx={{ ml: 0.5, fontWeight: 'bold', textTransform: 'uppercase', mt:1 }}>
                     Modifier
                     </Typography>
                 </IconButton>
@@ -92,7 +99,7 @@ const ListeUtilisateurs = () => {
                     title="Supprimer"
                 >
                     <DeleteIcon fontSize="small" />
-                    <Typography variant="caption" sx={{ ml: 0.5, fontWeight: 'bold', textTransform: 'uppercase' }}>
+                    <Typography variant="caption" sx={{ ml: 0.5, fontWeight: 'bold', textTransform: 'uppercase', mt:1 }}>
                     Supprimer
                     </Typography>
                 </IconButton>
@@ -114,14 +121,25 @@ const ListeUtilisateurs = () => {
                                 Liste des Utilisateurs
                             </Typography>
                             
-                            <Button 
-                                variant="contained" 
-                                startIcon={<PersonAddIcon />}
-                                onClick={() => navigate('/utilisateur')} 
-                                sx={{ bgcolor: '#1a237e', borderRadius: 2, px: 3 }}
-                            >
-                                AJOUTER UTILISATEUR
-                            </Button>
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Button 
+                                    variant="outlined" 
+                                    color="warning"
+                                    onClick={() => navigate('/utilisateurs/archives')} 
+                                    sx={{ borderRadius: 2, px: 3, fontWeight: 'bold' }}
+                                >
+                                    VOIR ARCHIVES
+                                </Button>
+                                
+                                <Button 
+                                    variant="contained" 
+                                    startIcon={<PersonAddIcon />}
+                                    onClick={() => navigate('/utilisateur')} 
+                                    sx={{ bgcolor: '#1a237e', borderRadius: 2, px: 3 }}
+                                >
+                                    AJOUTER UTILISATEUR
+                                </Button>
+                            </Box>
                         </Box>
 
                         <Paper sx={{ height: 500, width: '100%', borderRadius: 3, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
