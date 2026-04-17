@@ -72,7 +72,7 @@ const Clients = () => {
             }}
             sx={{ textTransform: 'none', borderRadius: 2 }}
           >
-            Archiver
+            Supprimer
           </Button>
         </Box>
       ),

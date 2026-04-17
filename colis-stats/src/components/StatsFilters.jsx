@@ -5,14 +5,27 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
+/**
+ * Filter grid — 5 columns × 2 rows, zero empty cells:
+ *
+ *  Col:      1               2               3               4               5
+ *  Row 1: [Code envoi]  [Date dépôt]  [Date statut]  [Date paiement]  [Statut    ]
+ *  Row 2: [Tel dest   ] [Ville      ]  [Paiement   ]  [CRBT          ] [Statut ↑↑]
+ *
+ *  "Statut" select spans rows 1-2 in col 5 → one tall select, perfectly centered.
+ */
+
 export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
-  
-  
-  const fieldStyle = { 
-    width:'100%', 
-    maxWidth: 290,
-    '& .MuiInputBase-root': { height: 40 }, 
-    '& .MuiInputLabel-root': { fontSize: '0.85rem' }
+
+  const selectStyle = {
+    width: '100%',
+    '& .MuiInputBase-root': { height: 40 },
+    '& .MuiInputLabel-root': { fontSize: '0.85rem' },
+  };
+
+  const textStyle = {
+    width: '100%',
+    '& .MuiInputBase-root': { height: 40 },
   };
 
   const handleChange = (field, value) => {
@@ -20,64 +33,74 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
   };
 
   const handleDateRangeChange = (startKey, endKey, newValue) => {
-    
     if (!filters[startKey] || (filters[startKey] && filters[endKey])) {
-      onFilterChange({ 
-        ...filters, 
-        [startKey]: newValue, 
-        [endKey]: null 
-      });
+      onFilterChange({ ...filters, [startKey]: newValue, [endKey]: null });
     } else {
-      onFilterChange({ 
-        ...filters, 
-        [endKey]: newValue 
-      });
+      onFilterChange({ ...filters, [endKey]: newValue });
     }
   };
 
-
-  const UnderlinedDateRange = ({ label, startKey, endKey }) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: 210 }}>
-      <Typography sx={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', mb: 0.2 }}>
+  /* ── Compact date range field (label + "from – to" row + icon) ── */
+  const DateRangeField = ({ label, startKey, endKey }) => (
+    <Box sx={{ width: '100%' }}>
+      <Typography sx={{ fontSize: '0.7rem', color: '#64748b', mb: 0.3, lineHeight: 1 }}>
         {label}
       </Typography>
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        borderBottom: '1px solid #cbd5e1', 
-        height: 32, 
-        px: 0.5
+      <Box sx={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        borderBottom: '1px solid #cbd5e1', height: 33, px: 0.5,
       }}>
-        
-        <Typography sx={{ fontSize: '0.8rem', color: '#1e293b' }}>
-          {filters[startKey] ? filters[startKey].format('MM/DD/YYYY') : 'MM/DD/YYYY'} - {filters[endKey] ? filters[endKey].format('MM/DD/YYYY') : 'MM/DD/YYYY'}
+        <Typography sx={{ fontSize: '0.76rem', color: '#1e293b', whiteSpace: 'nowrap', flexShrink: 1, overflow: 'hidden' }}>
+          {filters[startKey] ? filters[startKey].format('DD/MM/YY') : 'DD/MM/YY'}
+          &nbsp;–&nbsp;
+          {filters[endKey] ? filters[endKey].format('DD/MM/YY') : 'DD/MM/YY'}
         </Typography>
-        
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton 
-            size="small" 
-            sx={{ p: 0.2, mr: 0.5 }} 
-            onClick={() => {
-              onFilterChange({ 
-                ...filters, 
-                [startKey]: null, 
-                [endKey]: null 
-              });
-            }}
-          >
-            <RestartAltIcon sx={{ fontSize: 16, color: '#1e3a8a' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0, ml: 0.5 }}>
+          <IconButton size="small" sx={{ p: 0.2 }}
+            onClick={() => onFilterChange({ ...filters, [startKey]: null, [endKey]: null })}>
+            <RestartAltIcon sx={{ fontSize: 14, color: '#1e3a8a' }} />
           </IconButton>
-
           <DatePicker
-          
             onChange={(val) => handleDateRangeChange(startKey, endKey, val)}
             slotProps={{
               textField: {
                 variant: 'standard',
                 InputProps: { disableUnderline: true },
-                sx: { width: '24px', '& .MuiInputBase-input': { display: 'none' } } 
-              }
+                sx: { width: '22px', '& .MuiInputBase-input': { display: 'none' } },
+              },
+            }}
+          />
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  /* ── Single date field ── */
+  const SingleDateField = ({ label, filterKey }) => (
+    <Box sx={{ width: '100%' }}>
+      <Typography sx={{ fontSize: '0.7rem', color: '#64748b', mb: 0.3, lineHeight: 1 }}>
+        {label}
+      </Typography>
+      <Box sx={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        borderBottom: '1px solid #cbd5e1', height: 33, px: 0.5,
+      }}>
+        <Typography sx={{ fontSize: '0.76rem', color: '#1e293b' }}>
+          {filters[filterKey] ? filters[filterKey].format('DD/MM/YYYY') : 'DD/MM/YYYY'}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0, ml: 0.5 }}>
+          <IconButton size="small" sx={{ p: 0.2 }} onClick={() => handleChange(filterKey, null)}>
+            <RestartAltIcon sx={{ fontSize: 14, color: '#1e3a8a' }} />
+          </IconButton>
+          <DatePicker
+            value={filters[filterKey] || null}
+            onChange={(val) => handleChange(filterKey, val)}
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                InputProps: { disableUnderline: true },
+                sx: { width: '22px', '& .MuiInputBase-input': { display: 'none' } },
+              },
             }}
           />
         </Box>
@@ -88,118 +111,119 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
   return (
     <Paper elevation={0} sx={{ p: 2, mb: 3, border: '1px solid #e2e8f0', borderRadius: 2 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{ 
-          display: "flex", 
-          flexWrap: "wrap", 
-          gap: 2.5, 
-          alignItems: 'flex-end', 
-          justifyContent: 'flex-start' 
-        }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gridTemplateRows: 'auto auto',
+            columnGap: '14px',
+            rowGap: '10px',
+            alignItems: 'end',    // bottom-aligns items within each cell
+          }}
+        >
+          {/* ══════════════ ROW 1 ══════════════ */}
 
+          {/* Col 1 */}
           <TextField
             size="small"
             placeholder="Code envoi"
-            sx={fieldStyle}
+            sx={{ ...textStyle, gridColumn: '1', gridRow: '1' }}
             value={filters.codeEnvoi || ''}
             onChange={(e) => handleChange('codeEnvoi', e.target.value)}
             InputProps={{
-              endAdornment:(
+              endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon 
-                    fontSize="small" 
-                    sx={{ color: filters.codeEnvoi ? '#2563eb' : 'inherit' }} 
-                  />
+                  <SearchIcon fontSize="small" sx={{ color: filters.codeEnvoi ? '#2563eb' : 'inherit' }} />
                 </InputAdornment>
               ),
             }}
           />
 
+          {/* Col 2 */}
+          <Box sx={{ gridColumn: '2', gridRow: '1' }}>
+            <DateRangeField label="Date dépôt" startKey="dateDepotStart" endKey="dateDepotEnd" />
+          </Box>
+
+          {/* Col 3 */}
+          <Box sx={{ gridColumn: '3', gridRow: '1' }}>
+            <DateRangeField label="Date statut" startKey="dateStatutStart" endKey="dateStatutEnd" />
+          </Box>
+
+          {/* Col 4 */}
+          <Box sx={{ gridColumn: '4', gridRow: '1' }}>
+            <SingleDateField label="Date paiement" filterKey="datePaiement" />
+          </Box>
+
+          {/* Col 5 — Statut spans both rows */}
+          <Box sx={{ gridColumn: '5', gridRow: '1 / 3', display: 'flex', alignItems: 'center', pb: '10px' }}>
+            <TextField
+              select size="small" label="Statut"
+              sx={selectStyle}
+              value={filters.statut}
+              onChange={(e) => handleChange('statut', e.target.value)}
+            >
+              <MenuItem value="Tout statut">Tout statut</MenuItem>
+              <MenuItem value="liv">Livré</MenuItem>
+              <MenuItem value="aff">En cours</MenuItem>
+              <MenuItem value="aexp">En transit</MenuItem>
+              <MenuItem value="ret">Retour</MenuItem>
+            </TextField>
+          </Box>
+
+          {/* ══════════════ ROW 2 ══════════════ */}
+
+          {/* Col 1 */}
           <TextField
             size="small"
             placeholder="Tel destinataire"
-            sx={fieldStyle}
+            sx={{ ...textStyle, gridColumn: '1', gridRow: '2' }}
             value={filters.telephone || ''}
             onChange={(e) => handleChange('telephone', e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon 
-                    fontSize="small" 
-                    sx={{ color: filters.telephone ? '#2563eb' : 'inherit' }} 
-                  />
-                </InputAdornment>),
+                  <SearchIcon fontSize="small" sx={{ color: filters.telephone ? '#2563eb' : 'inherit' }} />
+                </InputAdornment>
+              ),
             }}
           />
 
-          <UnderlinedDateRange label="Date dépôt" startKey="dateDepotStart" endKey="dateDepotEnd" />
-          <UnderlinedDateRange label="Date statut" startKey="dateStatutStart" endKey="dateStatutEnd" />
-
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: 150 }}>
-          <Typography sx={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', mb: 0.2 }}>
-            Date paiement
-          </Typography>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            borderBottom: '1px solid #cbd5e1', 
-            height: 32, 
-            px: 0.5
-          }}>
-            <Typography sx={{ fontSize: '0.8rem', color: '#1e293b' }}>
-              {filters.datePaiement ? filters.datePaiement.format('MM/DD/YYYY') : 'MM/DD/YYYY'}
-            </Typography>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton 
-                size="small" 
-                sx={{ p: 0.2, mr: 0.5 }} 
-                onClick={() => handleChange('datePaiement', null)}
-              >
-                <RestartAltIcon sx={{ fontSize: 16, color: '#1e3a8a' }} />
-              </IconButton>
-
-              <DatePicker
-                value={filters.datePaiement || null}
-                onChange={(val) => handleChange('datePaiement', val)}
-                slotProps={{
-                  textField: {
-                    variant: 'standard',
-                    InputProps: { disableUnderline: true },
-                    sx: { width: '24px', '& .MuiInputBase-input': { display: 'none' } }
-                  }
-                }}
-              />
-            </Box>
-          </Box>
-        </Box>
-          
-
-          <TextField select size="small" label="Statut" sx={fieldStyle} value={filters.statut} onChange={(e) => handleChange('statut', e.target.value)}>
-            <MenuItem value="Tout statut">Tout statut</MenuItem>
-            <MenuItem value="liv">Livré</MenuItem>
-            <MenuItem value="aff">En cours</MenuItem>
-            <MenuItem value="aexp">En transit</MenuItem>
-            <MenuItem value="ret">Retour</MenuItem>
-          </TextField>
-
-          <TextField select size="small" label="Ville" sx={fieldStyle} value={filters.ville} onChange={(e) => handleChange('ville', e.target.value)}>
+          {/* Col 2 */}
+          <TextField
+            select size="small" label="Ville"
+            sx={{ ...selectStyle, gridColumn: '2', gridRow: '2' }}
+            value={filters.ville}
+            onChange={(e) => handleChange('ville', e.target.value)}
+          >
             <MenuItem value="Toute destination">Toute destination</MenuItem>
             {villes.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
           </TextField>
 
-          <TextField select size="small" label="Paiement" sx={fieldStyle} value={filters.paiement} onChange={(e) => handleChange('paiement', e.target.value)}>
+          {/* Col 3 */}
+          <TextField
+            select size="small" label="Paiement"
+            sx={{ ...selectStyle, gridColumn: '3', gridRow: '2' }}
+            value={filters.paiement}
+            onChange={(e) => handleChange('paiement', e.target.value)}
+          >
             <MenuItem value="Paiement">Tous</MenuItem>
             <MenuItem value="Payé">Payé</MenuItem>
             <MenuItem value="Impayé">Impayé</MenuItem>
           </TextField>
 
-          <TextField select size="small" label="CRBT" sx={fieldStyle} value={filters.crbt} onChange={(e) => handleChange('crbt', e.target.value)}>
+          {/* Col 4 */}
+          <TextField
+            select size="small" label="CRBT"
+            sx={{ ...selectStyle, gridColumn: '4', gridRow: '2' }}
+            value={filters.crbt}
+            onChange={(e) => handleChange('crbt', e.target.value)}
+          >
             <MenuItem value="CRBT">Tous</MenuItem>
             <MenuItem value="Avec">Avec CRBT</MenuItem>
             <MenuItem value="Sans">Sans CRBT</MenuItem>
           </TextField>
+
+          {/* Col 5 is occupied by the spanning Statut above */}
 
         </Box>
       </LocalizationProvider>
