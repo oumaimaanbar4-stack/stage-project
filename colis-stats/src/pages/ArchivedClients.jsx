@@ -74,7 +74,7 @@ const ArchivedClients = () => {
         <TextField size="small" placeholder="Rechercher par nom ou ID..." value={search}
           onChange={(e) => setSearch(e.target.value)} sx={{ mb: 3, width: 300 }} />
 
-        {/* Header */}
+        
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.5fr 1fr 220px', px: 2, py: 1, backgroundColor: '#f8f9fa', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e0e0e0' }}>
           <Typography fontSize="0.85rem" fontWeight={600} color="#555">Nom / Entreprise</Typography>
           <Typography fontSize="0.85rem" fontWeight={600} color="#555">Téléphone</Typography>

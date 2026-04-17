@@ -33,7 +33,7 @@ Route::get('/clients/{id}/bordereaux', [ClientController::class, 'getBordereaux'
 
 Route::get('/users/archived', [AuthController::class, 'archivedUsers']);
 Route::put('/users/{id}/restore', [AuthController::class, 'restoreUser']);
-Route::delete('/users/{id}', [AuthController::class, 'destroy']); // Normal delete now archives
+Route::delete('/users/{id}', [AuthController::class, 'destroy']); 
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

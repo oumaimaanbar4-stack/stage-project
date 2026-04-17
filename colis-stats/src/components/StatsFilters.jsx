@@ -5,15 +5,6 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
-/**
- * Filter grid — 5 columns × 2 rows, zero empty cells:
- *
- *  Col:      1               2               3               4               5
- *  Row 1: [Code envoi]  [Date dépôt]  [Date statut]  [Date paiement]  [Statut    ]
- *  Row 2: [Tel dest   ] [Ville      ]  [Paiement   ]  [CRBT          ] [Statut ↑↑]
- *
- *  "Statut" select spans rows 1-2 in col 5 → one tall select, perfectly centered.
- */
 
 export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
 
@@ -40,7 +31,7 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
     }
   };
 
-  /* ── Compact date range field (label + "from – to" row + icon) ── */
+  
   const DateRangeField = ({ label, startKey, endKey }) => (
     <Box sx={{ width: '100%' }}>
       <Typography sx={{ fontSize: '0.7rem', color: '#64748b', mb: 0.3, lineHeight: 1 }}>
@@ -75,7 +66,7 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
     </Box>
   );
 
-  /* ── Single date field ── */
+  
   const SingleDateField = ({ label, filterKey }) => (
     <Box sx={{ width: '100%' }}>
       <Typography sx={{ fontSize: '0.7rem', color: '#64748b', mb: 0.3, lineHeight: 1 }}>
@@ -118,12 +109,10 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             gridTemplateRows: 'auto auto',
             columnGap: '14px',
             rowGap: '10px',
-            alignItems: 'end',    // bottom-aligns items within each cell
+            alignItems: 'end',   
           }}
         >
-          {/* ══════════════ ROW 1 ══════════════ */}
 
-          {/* Col 1 */}
           <TextField
             size="small"
             placeholder="Code envoi"
@@ -139,22 +128,21 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             }}
           />
 
-          {/* Col 2 */}
           <Box sx={{ gridColumn: '2', gridRow: '1' }}>
             <DateRangeField label="Date dépôt" startKey="dateDepotStart" endKey="dateDepotEnd" />
           </Box>
 
-          {/* Col 3 */}
+ 
           <Box sx={{ gridColumn: '3', gridRow: '1' }}>
             <DateRangeField label="Date statut" startKey="dateStatutStart" endKey="dateStatutEnd" />
           </Box>
 
-          {/* Col 4 */}
+
           <Box sx={{ gridColumn: '4', gridRow: '1' }}>
             <SingleDateField label="Date paiement" filterKey="datePaiement" />
           </Box>
 
-          {/* Col 5 — Statut spans both rows */}
+
           <Box sx={{ gridColumn: '5', gridRow: '1 / 3', display: 'flex', alignItems: 'center', pb: '10px' }}>
             <TextField
               select size="small" label="Statut"
@@ -170,9 +158,6 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             </TextField>
           </Box>
 
-          {/* ══════════════ ROW 2 ══════════════ */}
-
-          {/* Col 1 */}
           <TextField
             size="small"
             placeholder="Tel destinataire"
@@ -188,7 +173,6 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             }}
           />
 
-          {/* Col 2 */}
           <TextField
             select size="small" label="Ville"
             sx={{ ...selectStyle, gridColumn: '2', gridRow: '2' }}
@@ -199,7 +183,6 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             {villes.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
           </TextField>
 
-          {/* Col 3 */}
           <TextField
             select size="small" label="Paiement"
             sx={{ ...selectStyle, gridColumn: '3', gridRow: '2' }}
@@ -211,7 +194,6 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             <MenuItem value="Impayé">Impayé</MenuItem>
           </TextField>
 
-          {/* Col 4 */}
           <TextField
             select size="small" label="CRBT"
             sx={{ ...selectStyle, gridColumn: '4', gridRow: '2' }}
@@ -222,9 +204,6 @@ export default function StatsFilters({ filters, onFilterChange, villes = [] }) {
             <MenuItem value="Avec">Avec CRBT</MenuItem>
             <MenuItem value="Sans">Sans CRBT</MenuItem>
           </TextField>
-
-          {/* Col 5 is occupied by the spanning Statut above */}
-
         </Box>
       </LocalizationProvider>
     </Paper>

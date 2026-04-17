@@ -71,7 +71,7 @@ const MapMorocco = () => {
             attribution='&copy; OpenStreetMap'
           />
           
-          {/* Official GeoJSON Borders */}
+          
           {geoData && (
             <GeoJSON 
               data={geoData} 

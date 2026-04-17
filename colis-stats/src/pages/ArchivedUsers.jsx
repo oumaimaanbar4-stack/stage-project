@@ -15,7 +15,7 @@ const ArchivedUsers = () => {
     api.get('/user').then(res => setCurrentUser(res.data)).catch(err => console.error(err));
   }, []);
 
-  // 2. Fetch the archived users from your new AuthController method
+  // 2. Fetch the archived users from my new AuthController method
   useEffect(() => {
     api.get('/users/archived').then(res => setUsers(res.data)).catch(err => console.error(err));
   }, []);
@@ -24,7 +24,7 @@ const ArchivedUsers = () => {
   const handleRestore = async (id) => {
     try {
       await api.put(`/users/${id}/restore`);
-      setUsers(prev => prev.filter(u => u.id !== id)); // Remove from list locally
+      setUsers(prev => prev.filter(u => u.id !== id)); 
     } catch (error) {
       alert("Erreur lors de la restauration de l'utilisateur.");
     }
@@ -51,7 +51,7 @@ const ArchivedUsers = () => {
         <TextField size="small" placeholder="Rechercher par nom ou email..." value={search}
           onChange={(e) => setSearch(e.target.value)} sx={{ mb: 3, width: 350, bgcolor: 'white' }} />
 
-        {/* Table Header */}
+       
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1fr 1fr 150px', px: 2, py: 1, backgroundColor: '#f8f9fa', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e0e0e0' }}>
           <Typography fontSize="0.85rem" fontWeight={600} color="#555">Nom Complet</Typography>
           <Typography fontSize="0.85rem" fontWeight={600} color="#555">Email</Typography>
@@ -60,7 +60,7 @@ const ArchivedUsers = () => {
           <Typography fontSize="0.85rem" fontWeight={600} color="#555">Actions</Typography>
         </Box>
 
-        {/* User Rows */}
+       
         {filteredUsers.map(user => (
           <Paper key={user.id} sx={{ borderRadius: 0, boxShadow: 'none', border: '1px solid #f0f0f0', borderTop: 'none' }}>
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1fr 1fr 150px', alignItems: 'center', px: 2, py: 1.5 }}>

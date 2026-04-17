@@ -7,7 +7,7 @@ const BarChart = ({ data }) => {
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="month" fontSize={12} tickLine={false} axisLine={false} />
         
-        {/* Left Y-Axis for CRBT (Money) */}
+        
         <YAxis 
           yAxisId="left"
           fontSize={12} 
@@ -16,7 +16,6 @@ const BarChart = ({ data }) => {
           tickFormatter={(value) => `${value} MAD`} 
         />
 
-        {/* Right Y-Axis for Envois (Quantity) */}
         <YAxis 
           yAxisId="right" 
           orientation="right" 
@@ -35,7 +34,7 @@ const BarChart = ({ data }) => {
         
         <Legend verticalAlign="top" align="center" iconType="plainline" iconSize={15} />
 
-        {/* CRBT Line uses the Left Axis */}
+       
         <Line 
           yAxisId="left"
           type="monotone" 
@@ -47,7 +46,7 @@ const BarChart = ({ data }) => {
           name="Total CRBT" 
         />
 
-        {/* Envois Line uses the Right Axis */}
+        
         <Line 
           yAxisId="right"
           type="monotone" 

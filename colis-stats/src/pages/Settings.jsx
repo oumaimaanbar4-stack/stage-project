@@ -66,7 +66,7 @@ const SettingsPage = () => {
 
               {status.msg && <Alert severity={status.type} sx={{ mb: 3 }}>{status.msg}</Alert>}
 
-              {/* Password Form */}
+              
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "bold" }}>Mot de passe actuel</Typography>
@@ -100,7 +100,7 @@ const SettingsPage = () => {
                 </Grid>
               </Grid>
 
-              {/* Action Buttons */}
+              
               <Box sx={{ mt: 5, display: "flex", justifyContent: "flex-end", gap: 2 }}>
                 <Button variant="text" color="inherit">Annuler</Button>
                 <Button 
@@ -108,7 +108,7 @@ const SettingsPage = () => {
                   startIcon={<SaveIcon />}
                   onClick={handleSave}
                   sx={{ 
-                    bgcolor: "#ff6d00", // Amana Orange
+                    bgcolor: "#ff6d00", 
                     "&:hover": { bgcolor: "#e65100" },
                     px: 4,
                     borderRadius: "8px",
