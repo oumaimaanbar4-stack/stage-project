@@ -7,11 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from "../components/NavBar";
 import PageTabs from '../components/PageTabs';
 import api from '../services/api';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const Clients = () => {
   const [clients, setClients] = useState([]);
   const navigate = useNavigate();
   const [user, setUser] = useState({ name: '', role: '' });
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, clientId: null, clientName: '' });
 
   useEffect(() => {
     api.get('/user')
@@ -29,14 +31,18 @@ const Clients = () => {
     navigate(`/bordereaux/${params.id}`);
   };
 
-  const handleArchive = async (id) => {
-    if (!window.confirm('Archiver ce client ?')) return;
+  const handleArchive = (id, name) => {
+    setConfirmDialog({ open: true, clientId: id, clientName: name });
+  };
+
+  const handleArchiveConfirm = async () => {
+    const { clientId } = confirmDialog;
+    setConfirmDialog({ open: false, clientId: null, clientName: '' });
     try {
-      await api.delete(`/clients/${id}`);
-      setClients(prev => prev.filter(c => c.id !== id));
+      await api.delete(`/clients/${clientId}`);
+      setClients(prev => prev.filter(c => c.id !== clientId));
     } catch (error) {
       console.error("Erreur archivage:", error);
-      alert("Impossible d'archiver ce client.");
     }
   };
 
@@ -68,7 +74,7 @@ const Clients = () => {
             size="small"
             onClick={(e) => {
               e.stopPropagation();
-              handleArchive(params.row.id);
+              handleArchive(params.row.id, params.row.nom);
             }}
             sx={{ textTransform: 'none', borderRadius: 2 }}
           >
@@ -139,6 +145,22 @@ const Clients = () => {
           />
         </Paper>
       </Box>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onClose={() => setConfirmDialog({ open: false, clientId: null, clientName: '' })}
+        onConfirm={handleArchiveConfirm}
+        title="Archiver ce client ?"
+        message={
+          <>
+            <strong>{confirmDialog.clientName}</strong> sera archivé définitivement.
+            Ses bordereaux associés resteront dans le système.
+          </>
+        }
+        confirmText="Archiver"
+        cancelText="Annuler"
+        severity="warning"
+      />
     </Box>
   );
 };

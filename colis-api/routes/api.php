@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\ModificationRequestController;
+use App\Http\Controllers\Api\UserController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,9 +32,21 @@ Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 Route::put('/clients/{id}/restore', [ClientController::class, 'restore']);
 Route::get('/clients/{id}/bordereaux', [ClientController::class, 'getBordereaux']);
 
+
+Route::get('/all-users',     [UserController::class, 'index']);
 Route::get('/users/archived', [AuthController::class, 'archivedUsers']);
+Route::post('/users',        [UserController::class, 'store']);
+Route::put('/users/{id}',    [UserController::class, 'update']);
 Route::put('/users/{id}/restore', [AuthController::class, 'restoreUser']);
-Route::delete('/users/{id}', [AuthController::class, 'destroy']); 
+Route::delete('/users/{id}', [AuthController::class, 'destroy']);
+
+
+
+
+   
+Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -41,11 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/user', function (Request $request) {
     return $request->user();
   });
-  Route::get('/all-users', function () {
-    return \App\Models\User::all();
-  });
 
-  Route::post('/users', [AuthController::class, 'register']);
 });
 Route::middleware('auth:sanctum')->get('/admin/stats', [ProfileController::class, 'getStats']);
 Route::middleware('auth:sanctum')->put('/user/update-password', [ProfileController::class, 'updatePassword']);
