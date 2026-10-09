@@ -14,10 +14,13 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin Amana',
-            'email' => 'admin@amana.ma',
-            'password' => Hash::make('password123'), 
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@amana.ma'],
+            [
+                'name'     => 'Admin Amana',
+                'password' => Hash::make('password123'),
+                'role'     => 'admin', // Ajoute le rôle si nécessaire
+            ]
+        );
     }
 }
