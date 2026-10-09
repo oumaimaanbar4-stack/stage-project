@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://amana-track.infinityfreeapp.com/api',
+    baseURL: 'https://amana-track.infinityfreeapp.com/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
